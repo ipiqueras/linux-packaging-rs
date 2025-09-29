@@ -1,6 +1,6 @@
 [package]
 name = "linux-package-analyzer"
-version = "0.3.0"
+version = "0.4.0"
 edition = "2021"
 rust-version = "1.88.0"
 authors = ["Gregory Szorc <gregory.szorc@gmail.com>"]
@@ -32,7 +32,7 @@ tokio = { version = "1.49.0", features = ["full"] }
 url = "2.5.8"
 
 [dependencies.debian-packaging]
-version = "0.18.0"
+version = "0.19.0"
 path = "../debian-packaging"
 
 # rpm-rs seems to be unmaintained and its old dependencies are holding us back.

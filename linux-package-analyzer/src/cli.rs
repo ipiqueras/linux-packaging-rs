@@ -302,7 +302,7 @@ async fn command_import_debian_repository(args: &ArgMatches) -> Result<()> {
 
     let mut db = crate::db::DatabaseConnection::new_path(db_path)?;
 
-    let root_reader = debian_packaging::repository::reader_from_str(url)?;
+    let root_reader = debian_packaging::repository::reader_from_str_async(url).await?;
     eprintln!("fetching InRelease file for {}", distribution);
     let release = root_reader.release_reader(distribution).await?;
 

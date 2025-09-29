@@ -68,7 +68,7 @@ s3://
    variables as is typical for AWS clients. For example, it looks in
    `~/.aws/config` and in `AWS_*` environment variables.
 
-   Write-only (reads not supported)
+   Supports both reading from and writing to S3 repositories.
 
 In all cases, the URL should point to the base of the Debian repository. This
 is typically a directory containing `dists` and `pool` sub-directories.

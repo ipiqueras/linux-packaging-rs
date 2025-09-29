@@ -1,6 +1,6 @@
 [package]
 name = "debian-packaging"
-version = "0.18.0"
+version = "0.19.0"
 authors = ["Gregory Szorc <gregory.szorc@gmail.com>"]
 edition = "2021"
 rust-version = "1.88.0"
@@ -55,17 +55,18 @@ optional = true
 default-features = false
 features = ["rustls-tls", "stream"]
 
-[dependencies.rusoto_core]
-version = "0.48.0"
+[dependencies.aws-config]
+version = "1.1.7"
 optional = true
-default-features = false
-features = ["rustls"]
 
-[dependencies.rusoto_s3]
-version = "0.48.0"
+[dependencies.aws-sdk-s3]
+version = "1.17.0"
 optional = true
-default-features = false
-features = ["rustls"]
+
+[dependencies.tokio-util]
+version = "0.7"
+optional = true
+features = ["compat"]
 
 [dev-dependencies]
 glob = "0.3.3"
@@ -76,4 +77,4 @@ tokio = { version = "1.49.0", features = ["macros", "rt"] }
 [features]
 default = ["http", "s3"]
 http = ["reqwest"]
-s3 = ["dep:rusoto_core", "dep:rusoto_s3", "dep:tokio"]
+s3 = ["dep:aws-config", "dep:aws-sdk-s3", "dep:tokio", "dep:tokio-util"]

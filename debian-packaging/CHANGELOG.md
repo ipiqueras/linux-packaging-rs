@@ -14,6 +14,41 @@ Released on ReleaseDate.
 * `strum` 0.26 -> 0.27.
 * `thiserror` 1.0 -> 2.0.
 
+## 0.19.0
+
+Released on 2025-01-26.
+
+### Breaking Changes
+
+* **BREAKING**: S3 functionality migrated from Rusoto to official AWS SDK for Rust (`aws-sdk-s3`).
+  - Replaced `rusoto_core` and `rusoto_s3` dependencies with `aws-config` and `aws-sdk-s3`
+  - S3 client constructors now require async context and have changed signatures
+  - `S3RepositoryClient::new()` is now async and uses default AWS configuration
+  - `S3Writer::new()` is now async and uses default AWS configuration
+  - Region detection and handling updated to use new AWS SDK patterns
+  - Users upgrading will need to update their S3-related code to use async constructors
+
+### New Features
+
+* Added complete S3 repository reading support via `S3RepositoryClient` implementing `RepositoryRootReader`
+* Added `reader_from_str_async()` function for better S3 URL handling with automatic region detection
+* S3 repository copier now supports both reading from and writing to S3 repositories
+* Enhanced CLI documentation for S3 support in `drt` tool
+
+### Improvements
+
+* Better error messages for S3 operations using structured AWS SDK error types
+* Improved async handling throughout S3 implementation
+* More robust region detection and automatic configuration
+* Updated S3 examples and documentation for modern AWS SDK patterns
+
+### Dependencies
+
+* Added `aws-config` 1.1.7 (optional)
+* Added `aws-sdk-s3` 1.17.0 (optional)
+* Added `tokio-util` 0.7 with compat feature (optional)
+* Removed `rusoto_core` and `rusoto_s3` dependencies
+
 ## 0.18.0
 
 Released on 2024-11-02.

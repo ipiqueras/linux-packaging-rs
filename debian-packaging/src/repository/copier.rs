@@ -9,7 +9,7 @@ use {
         error::{DebianError, Result},
         io::ContentDigest,
         repository::{
-            reader_from_str, writer_from_str, CopyPhase, PublishEvent, ReleaseReader,
+            reader_from_str, reader_from_str_async, writer_from_str, CopyPhase, PublishEvent, ReleaseReader,
             RepositoryRootReader, RepositoryWriteOperation, RepositoryWriter,
         },
     },
@@ -173,7 +173,12 @@ impl RepositoryCopier {
         max_copy_operations: usize,
         progress_cb: &Option<Box<dyn Fn(PublishEvent) + Sync>>,
     ) -> Result<()> {
-        let root_reader = reader_from_str(config.source_url)?;
+        // Use async reader if the source URL is S3, otherwise use the sync version
+        let root_reader = if config.source_url.starts_with("s3://") {
+            reader_from_str_async(config.source_url).await?
+        } else {
+            reader_from_str(config.source_url)?
+        };
         let writer = writer_from_str(config.destination_url).await?;
 
         let mut copier = Self::default();
