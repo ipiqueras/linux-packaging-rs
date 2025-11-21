@@ -907,11 +907,10 @@ impl<'cf> RepositoryBuilder<'cf> {
                 std::iter::once("".to_string())
                     .chain(entries.iter().map(|(path, (size, digest))| {
                         format!(
-                            " {:<path_width$} {:>size_width$} {}",
-                            path,
-                            size,
+                            " {} {:>size_width$} {}",
                             digest,
-                            path_width = longest_path,
+                            size,
+                            path,
                             size_width = longest_size
                         )
                     }))
