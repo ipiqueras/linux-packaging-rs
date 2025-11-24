@@ -442,6 +442,56 @@ impl<'cf> RepositoryBuilder<'cf> {
             || !self.translations.is_empty()
     }
 
+    /// Add an existing binary package paragraph to this repository.
+    ///
+    /// This method is useful when updating existing repositories where you want to preserve
+    /// packages that are already in the repository. The paragraph should be a complete
+    /// control paragraph as it would appear in a Packages file, including all required fields.
+    ///
+    /// # Arguments
+    /// * `component` - Component name (e.g., "main", "contrib")
+    /// * `architecture` - Architecture (e.g., "amd64", "all")
+    /// * `paragraph` - Complete control paragraph for the package
+    ///
+    /// # Returns
+    /// Ok(()) on success, or error if component/architecture is not registered
+    pub fn add_binary_package_paragraph(
+        &mut self,
+        component: &str,
+        architecture: &str,
+        paragraph: ControlParagraph<'cf>,
+    ) -> Result<()> {
+        if !self.components.contains(component) {
+            return Err(DebianError::RepositoryBuildUnknownComponent(
+                component.to_string(),
+            ));
+        }
+
+        if !self.architectures.contains(architecture) {
+            return Err(DebianError::RepositoryBuildUnknownArchitecture(
+                architecture.to_string(),
+            ));
+        }
+
+        // Extract package name and version from the paragraph
+        let package = paragraph
+            .field_str("Package")
+            .ok_or_else(|| DebianError::ControlRequiredFieldMissing("Package".to_string()))?;
+        let version = paragraph
+            .field_str("Version")
+            .ok_or_else(|| DebianError::ControlRequiredFieldMissing("Version".to_string()))?;
+
+        let component_key = (component.to_string(), architecture.to_string());
+        let package_key = (package.to_string(), version.to_string());
+        
+        self.binary_packages
+            .entry(component_key)
+            .or_default()
+            .insert(package_key, paragraph);
+
+        Ok(())
+    }
+
     /// Add a binary package `.deb` to this repository in the given component.
     ///
     /// The package to add is specified as a trait to enable callers to represent Debian
